@@ -3,17 +3,14 @@
   <h1 class="mat-display-3">
     {{ title }}
   </h1>
-  <img width="50" alt="Pull Party" src="assets/pull_icon.png">
-</div>
+  </div>
 
 <div>
-  <h2>Latest PRs</h2>
-
-  <div *ngFor="let pull of pullRequests">
+    <div *ngFor="let pull of pullRequests">
     <a href="{{pull.html_url}}" target="_blank" style="text-decoration:none">
-    <mat-card style="margin-bottom:8px;">
+    <mat-card style="margin-bottom:8px;" [ngStyle]="cardBackground(pull)">
       <mat-card-title>{{pull.title}}</mat-card-title>
-      <mat-card-subtitle>{{pull.user.login}} - {{pull.created_at}} - {{pull.timeSinceCreation}}</mat-card-subtitle>
+      <mat-card-subtitle>{{pull.user.login}} - {{pull.created_at | date:'short'}} </mat-card-subtitle>
     </mat-card>
   </a>
   </div>
