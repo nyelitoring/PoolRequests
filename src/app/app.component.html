@@ -6,12 +6,19 @@
 
   <img src="assets/pool.png" style="height:60px"/>
 
-  <mat-form-field style="float:right">
+
+
+<span style="float:right">
+  <div>
+  Updated: {{lastUpdatedTimestamp | date:'medium'}}
+</div>
+  <mat-form-field >
     <mat-select [(value)]="selectedRepo" (change)="pollForRequests()">
       <mat-option value="ring-android">Android</mat-option>
       <mat-option value="ring-ios">iOS</mat-option>
     </mat-select>
   </mat-form-field>
+</span>
 </div>
 <div>
   <div *ngFor="let pull of pullRequests">

@@ -23,6 +23,7 @@ export class AppComponent {
   refreshMinutes = 5;
   sub;
   pollSub;
+  lastUpdatedTimestamp;
 
   constructor(private githubService: GithubServiceService) {
     this.service = githubService;
@@ -43,6 +44,7 @@ export class AppComponent {
         this.retrievalInProgress = false;
         if (pr != undefined) {
           this.pullRequests.push(pr);
+          this.lastUpdatedTimestamp = new Date();
         }
       });
   }
