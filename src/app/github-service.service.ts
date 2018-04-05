@@ -13,7 +13,7 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class GithubServiceService {
   baseUrl = 'https://api.github.com';
-  access_token = '153ffacfc7057b27bea3714879adced536f2958d';
+  access_token = '';
   state = 'open';
   direction = 'desc';
 
@@ -63,7 +63,7 @@ export class GithubServiceService {
   function checkComments(comments){
     var isShipped = false;
     comments.forEach(comment => {
-      console.log(comment.body);
+      // console.log(comment.body);
       if (comment.body.includes('shipit')) {
         isShipped = true;
       }

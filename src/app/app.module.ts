@@ -1,10 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
+import {FormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {GithubServiceService} from "app/github-service.service";
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule, MatSelectModule, MatFormFieldModule, MatInputModule,
+   MatOptionModule, MatProgressSpinnerModule } from '@angular/material';
+
 
 
 
@@ -15,7 +19,14 @@ import { MatCardModule } from '@angular/material/card';
   imports: [
     BrowserModule,
     HttpModule,
-    MatCardModule
+    MatCardModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [GithubServiceService],
   bootstrap: [AppComponent]
