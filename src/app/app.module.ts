@@ -4,6 +4,8 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {GithubServiceService} from "app/github-service.service";
+import { MatCardModule } from '@angular/material/card';
+
 
 
 @NgModule({
@@ -12,7 +14,8 @@ import {GithubServiceService} from "app/github-service.service";
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpModule,
+    MatCardModule
   ],
   providers: [GithubServiceService],
   bootstrap: [AppComponent]
