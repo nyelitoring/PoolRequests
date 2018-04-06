@@ -4,11 +4,11 @@
     {{ title }}
   </h1>
 
-  <img src="assets/pool.png" style="height:60px"/>
+  <img src="assets/pool.png" style="height:60px" />
 
 
 
-<span style="float:right">
+  <span style="float:right">
   <div>
   Updated: {{lastUpdatedTimestamp | date:'medium'}}
 </div>
@@ -24,8 +24,13 @@
   <div *ngFor="let pull of pullRequests">
     <a href="{{pull.html_url}}" target="_blank" style="text-decoration:none">
       <mat-card style="margin-bottom:8px;" [ngStyle]="cardBackground(pull)">
-        <mat-card-title>{{pull.title}}</mat-card-title>
-        <mat-card-subtitle>{{pull.created_at | date:'short'}} - {{pull.user.login}}</mat-card-subtitle>
+
+        <mat-card-title-group>
+          <mat-card-title>{{pull.title}}</mat-card-title>
+          <mat-card-subtitle>{{pull.created_at | date:'short'}} - {{pull.user.login}}</mat-card-subtitle>
+          <img *ngIf="pull.isNew" mat-card-avatar src="assets/new-box.png" />
+
+        </mat-card-title-group>
       </mat-card>
     </a>
   </div>

@@ -16,6 +16,7 @@ export class GithubServiceService {
   access_token = '';
   state = 'open';
   direction = 'desc';
+  newCutOffMinutes = 15;
 
   constructor(private http: Http) {
   }
@@ -44,6 +45,10 @@ export class GithubServiceService {
 
                   var timeInMillis = new Date().getTime() - new Date(pr.created_at).getTime();
                   pr.timeSinceCreation = Math.trunc((timeInMillis / 1000) / 60);
+
+                  if(pr.timeSinceCreation < this.newCutOffMinutes){
+                    pr.isNew = true;
+                  }
                   return pr;
                 });
             })
@@ -64,7 +69,7 @@ export class GithubServiceService {
     var isShipped = false;
     comments.forEach(comment => {
       // console.log(comment.body);
-      if (comment.body.includes('shipit')) {
+      if (comment.body.includes('ship')) {
         isShipped = true;
       }
     })
