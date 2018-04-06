@@ -42,7 +42,7 @@ export class AppComponent {
       .flatMap(pr => pr)
       .subscribe(pr => {
         this.retrievalInProgress = false;
-        if (pr != undefined) {
+        if (pr.isValid) {
           this.pullRequests.push(pr);
           this.lastUpdatedTimestamp = new Date();
         }

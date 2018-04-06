@@ -21,40 +21,84 @@ export class GithubServiceService {
   constructor(private http: Http) {
   }
 
+  // getPullRequests(repo): Observable<any[]> {
+  //   return this.http.get(this.baseUrl + `/repos/EdisonJunior/` + repo
+  //     + `/pulls?access_token=` + this.access_token + `&state=` + this.state
+  //     + `&direction=` + this.direction)
+  //     .map((res: any) => res.json())
+  //     .flatMap((prs: any[]) => {
+  //       if (prs.length > 0) {
+  //         return Observable.forkJoin(
+  //           prs.map((pr: any) => {
+  //             return this.http.get(pr.comments_url + '?access_token=' + this.access_token)
+  //               .map((res: any) => {
+  //                 let comments: any = res.json();
+  //
+  //
+  //                 if(pr.base.ref != 'develop'){
+  //                   return undefined;
+  //                 }
+  //
+  //                 if(checkComments(comments)){
+  //                   return undefined;
+  //                 }
+  //
+  //                 var timeInMillis = new Date().getTime() - new Date(pr.created_at).getTime();
+  //                 pr.timeSinceCreation = Math.trunc((timeInMillis / 1000) / 60);
+  //
+  //                 if(pr.timeSinceCreation < this.newCutOffMinutes){
+  //                   pr.isNew = true;
+  //                 }
+  //                 return pr;
+  //               });
+  //           })
+  //         );
+  //       }
+  //       return Observable.of([]);
+  //     });
+  // }
+
+
   getPullRequests(repo): Observable<any[]> {
     return this.http.get(this.baseUrl + `/repos/EdisonJunior/` + repo
       + `/pulls?access_token=` + this.access_token + `&state=` + this.state
       + `&direction=` + this.direction)
       .map((res: any) => res.json())
-      .flatMap((prs: any[]) => {
-        if (prs.length > 0) {
-          return Observable.forkJoin(
-            prs.map((pr: any) => {
-              return this.http.get(pr.comments_url + '?access_token=' + this.access_token)
-                .map((res: any) => {
-                  let comments: any = res.json();
+      .flatMap((prs: any[]) => prs)
+      .flatMap(pr => {
+        return Observable.forkJoin(
+          Observable.of(pr),
+          this.http.get(pr.comments_url + '?access_token=' + this.access_token).map((res: any) => res.json()),
+          this.http.get(pr.url + '?access_token=' + this.access_token).map((res: any) => res.json())
+        )
+          .map((data: any[]) => {
+            let pr = data[0];
+            let comments = data[1];
+            let prDetails = data[2];
+            pr.isValid = true;
+            if (pr.base.ref != 'develop') {
+              pr.isValid = false;
+              return Observable.of(pr);
+            }
+
+            if (isReviewed(comments)) {
+              pr.isValid = false;
+              return Observable.of(pr);
+            }
+
+            var timeInMillis = new Date().getTime() - new Date(pr.created_at).getTime();
+            pr.timeSinceCreation = Math.trunc((timeInMillis / 1000) / 60);
+
+            if (pr.timeSinceCreation < this.newCutOffMinutes) {
+              pr.isNew = true;
+            }
+
+            pr.isMergeable = prDetails.mergeable;
+            console.log(prDetails);
+            return Observable.of(pr);
+          });
 
 
-                  if(pr.base.ref != 'develop'){
-                    return undefined;
-                  }
-
-                  if(checkComments(comments)){
-                    return undefined;
-                  }
-
-                  var timeInMillis = new Date().getTime() - new Date(pr.created_at).getTime();
-                  pr.timeSinceCreation = Math.trunc((timeInMillis / 1000) / 60);
-
-                  if(pr.timeSinceCreation < this.newCutOffMinutes){
-                    pr.isNew = true;
-                  }
-                  return pr;
-                });
-            })
-          );
-        }
-        return Observable.of([]);
       });
   }
 
@@ -65,17 +109,17 @@ export class GithubServiceService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  function checkComments(comments){
-    var isShipped = false;
-    comments.forEach(comment => {
-      // console.log(comment.body);
-      if (comment.body.includes('ship')) {
-        isShipped = true;
-      }
-    })
+  function isReviewed(comments) {
+  var isShipped = false;
+  comments.forEach(comment => {
+    // console.log(comment.body);
+    if (comment.body.includes('ship')) {
+      isShipped = true;
+    }
+  })
 
-    return isShipped;
-  }
+  return isShipped;
+}
 
 
 

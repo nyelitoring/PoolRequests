@@ -29,6 +29,8 @@
           <mat-card-title>{{pull.title}}</mat-card-title>
           <mat-card-subtitle>{{pull.created_at | date:'short'}} - {{pull.user.login}}</mat-card-subtitle>
           <img *ngIf="pull.isNew" mat-card-avatar src="assets/new-box.png" />
+          <img mat-card-avatar [src]="pull.isMergeable ? 'assets/green-check.png' : 'assets/red-alert.png'"
+          [title]="pull.isMergeable ? 'Can be merged!' : 'Cannot be merged!'" />
 
         </mat-card-title-group>
       </mat-card>
