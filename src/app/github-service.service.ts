@@ -13,7 +13,7 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class GithubServiceService {
   baseUrl = 'https://api.github.com';
-  access_token = '2d32d2c654a84b5f311be80f9e883878663c8817';
+  access_token = '';
   state = 'open';
   direction = 'desc';
   newCutOffMinutes = 15;

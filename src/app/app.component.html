@@ -6,19 +6,20 @@
 
   <img src="assets/pool.png" style="height:60px" />
 
+  <div style="float:right">
+    <div><img src="assets/refresh.png" style="height:30px;float:left;cursor:pointer;" (click)="retrievePullRequests()" />
+    </div>
+    <div class="mat-caption">
+      Updated: {{lastUpdatedTimestamp | date:'medium'}}
+    </div>
+    <mat-form-field>
+      <mat-select [(value)]="selectedRepo" (change)="pollForRequests()">
+        <mat-option value="ring-android">Android</mat-option>
+        <mat-option value="ring-ios">iOS</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-
-  <span style="float:right">
-  <div>
-  Updated: {{lastUpdatedTimestamp | date:'medium'}}
-</div>
-  <mat-form-field >
-    <mat-select [(value)]="selectedRepo" (change)="pollForRequests()">
-      <mat-option value="ring-android">Android</mat-option>
-      <mat-option value="ring-ios">iOS</mat-option>
-    </mat-select>
-  </mat-form-field>
-</span>
 </div>
 <div>
   <div *ngFor="let pull of pullRequests">
@@ -29,8 +30,7 @@
           <mat-card-title>{{pull.title}}</mat-card-title>
           <mat-card-subtitle>{{pull.created_at | date:'short'}} - {{pull.user.login}}</mat-card-subtitle>
           <img *ngIf="pull.isNew" mat-card-avatar src="assets/new-box.png" />
-          <img mat-card-avatar [src]="pull.isMergeable ? 'assets/green-check.png' : 'assets/red-alert.png'"
-          [title]="pull.isMergeable ? 'Can be merged!' : 'Cannot be merged!'" />
+          <img mat-card-avatar [src]="pull.isMergeable ? 'assets/green-check.png' : 'assets/red-alert.png'" [title]="pull.isMergeable ? 'Can be merged!' : 'Cannot be merged!'" />
 
         </mat-card-title-group>
       </mat-card>
