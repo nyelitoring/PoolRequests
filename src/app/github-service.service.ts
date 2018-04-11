@@ -13,51 +13,13 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class GithubServiceService {
   baseUrl = 'https://api.github.com';
-  access_token = '';
+  access_token = '2d32d2c654a84b5f311be80f9e883878663c8817';
   state = 'open';
   direction = 'desc';
   newCutOffMinutes = 15;
 
   constructor(private http: Http) {
   }
-
-  // getPullRequests(repo): Observable<any[]> {
-  //   return this.http.get(this.baseUrl + `/repos/EdisonJunior/` + repo
-  //     + `/pulls?access_token=` + this.access_token + `&state=` + this.state
-  //     + `&direction=` + this.direction)
-  //     .map((res: any) => res.json())
-  //     .flatMap((prs: any[]) => {
-  //       if (prs.length > 0) {
-  //         return Observable.forkJoin(
-  //           prs.map((pr: any) => {
-  //             return this.http.get(pr.comments_url + '?access_token=' + this.access_token)
-  //               .map((res: any) => {
-  //                 let comments: any = res.json();
-  //
-  //
-  //                 if(pr.base.ref != 'develop'){
-  //                   return undefined;
-  //                 }
-  //
-  //                 if(checkComments(comments)){
-  //                   return undefined;
-  //                 }
-  //
-  //                 var timeInMillis = new Date().getTime() - new Date(pr.created_at).getTime();
-  //                 pr.timeSinceCreation = Math.trunc((timeInMillis / 1000) / 60);
-  //
-  //                 if(pr.timeSinceCreation < this.newCutOffMinutes){
-  //                   pr.isNew = true;
-  //                 }
-  //                 return pr;
-  //               });
-  //           })
-  //         );
-  //       }
-  //       return Observable.of([]);
-  //     });
-  // }
-
 
   getPullRequests(repo): Observable<any[]> {
     return this.http.get(this.baseUrl + `/repos/EdisonJunior/` + repo
@@ -81,7 +43,7 @@ export class GithubServiceService {
               return Observable.of(pr);
             }
 
-            if (isReviewed(comments)) {
+            if (isShipIted(comments)) {
               pr.isValid = false;
               return Observable.of(pr);
             }
@@ -109,16 +71,19 @@ export class GithubServiceService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  function isReviewed(comments) {
+  function isShipIted(comments) {
   var isShipped = false;
   comments.forEach(comment => {
     // console.log(comment.body);
-    if (comment.body.includes('ship')) {
+    if (comment.body.includes('ship') || comment.body.includes("🚢")) {
       isShipped = true;
     }
   })
 
   return isShipped;
+}
+
+
 }
 
 
