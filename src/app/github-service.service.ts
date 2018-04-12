@@ -86,19 +86,19 @@ export class GithubServiceService {
 }
 
 function isReviewedByAll(reviews) {
-  var isReviewed = false;
+  var isReviewed = true;
   if (reviews === undefined || reviews.length == 0) {
     return false;
   }
 
   reviews.forEach(review => {
     if (!review.state.includes("APPROVED")) {
-      return false;
+      isReviewed = false;
     }
   });
 
 
-  return true;
+  return isReviewed;
 
 }
 
