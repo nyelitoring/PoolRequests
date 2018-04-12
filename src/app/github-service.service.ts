@@ -31,19 +31,21 @@ export class GithubServiceService {
         return Observable.forkJoin(
           Observable.of(pr),
           this.http.get(pr.comments_url + '?access_token=' + this.access_token).map((res: any) => res.json()),
-          this.http.get(pr.url + '?access_token=' + this.access_token).map((res: any) => res.json())
+          this.http.get(pr.url + '?access_token=' + this.access_token).map((res: any) => res.json()),
+          this.http.get(pr.url + '/reviews' + '?access_token=' + this.access_token).map((res: any) => res.json())
         )
           .map((data: any[]) => {
             let pr = data[0];
             let comments = data[1];
             let prDetails = data[2];
+            let reviews = data[3];
             pr.isValid = true;
             if (pr.base.ref != 'develop') {
               pr.isValid = false;
               return Observable.of(pr);
             }
 
-            if (isShipIted(comments)) {
+            if (isShipIted(comments) || isReviewedByAll(reviews)) {
               pr.isValid = false;
               return Observable.of(pr);
             }
@@ -56,7 +58,7 @@ export class GithubServiceService {
             }
 
             pr.isMergeable = prDetails.mergeable;
-            console.log(prDetails);
+            // console.log(prDetails);
             return Observable.of(pr);
           });
 
@@ -81,6 +83,23 @@ export class GithubServiceService {
   })
 
   return isShipped;
+}
+
+function isReviewedByAll(reviews) {
+  var isReviewed = false;
+  if (reviews === undefined || reviews.length == 0) {
+    return false;
+  }
+
+  reviews.forEach(review => {
+    if (!review.state.includes("APPROVED")) {
+      return false;
+    }
+  });
+
+
+  return true;
+
 }
 
 
